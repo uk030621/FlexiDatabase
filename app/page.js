@@ -9,7 +9,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col py-6 items-center justify-start bg-gray-100">
-      <h1 className="text-3xl font-bold mb-2">Dynamic Database System</h1>
+      <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">
+        Dynamic Database System
+      </h1>
 
       {/* Guide Dropdown */}
       <div className="mt-2 mb-6 px-4 ">
