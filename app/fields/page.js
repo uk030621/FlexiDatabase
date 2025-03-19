@@ -153,7 +153,7 @@ export default function Fields() {
             onChange={(e) =>
               setEditingField({ ...editingField, name: e.target.value })
             }
-            className="border p-2 rounded mr-2"
+            className="border p-2 rounded mr-2 mb-2"
             required
           />
           <input
@@ -163,7 +163,7 @@ export default function Fields() {
             onChange={(e) =>
               setEditingField({ ...editingField, label: e.target.value })
             }
-            className="border p-2 rounded mr-2"
+            className="border p-2 rounded mr-2 mb-2"
             required
           />
           <select
@@ -198,9 +198,9 @@ export default function Fields() {
           )}
           <button
             type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+            className="bg-green-500 text-white px-4 py-2 rounded mr-2 mt-3"
           >
-            Update Field
+            Update
           </button>
           <button
             type="button"
