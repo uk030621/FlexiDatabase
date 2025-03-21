@@ -81,7 +81,7 @@ export default function Fields() {
         href="/customers"
         className="bg-black px-2 py-1 ml-8 rounded-md mt-4 text-sm align-self text-white hover:underline"
       >
-        Database Records
+        Go To Database Records
       </Link>
       <h1 className="text-3xl font-bold mt-4 mb-6">Database Design</h1>
 

@@ -112,14 +112,14 @@ export default function Customers() {
         href="/fields"
         className="bg-black px-2 py-1 ml-8 rounded-md mt-4 text-sm align-self text-white hover:underline"
       >
-        Database Design
+        Go To Database Design
       </Link>
       <h1 className="text-3xl font-bold mt-4 mb-6">Database Records</h1>
 
       {/* Fast Search */}
       <input
         type="text"
-        placeholder="Search customers..."
+        placeholder="Search records..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="border p-2 rounded w-full mb-4"
