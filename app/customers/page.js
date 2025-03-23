@@ -130,13 +130,16 @@ export default function Customers() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="border p-2 rounded flex-grow"
         />
-        <button
-          onClick={() => setSearchTerm("")}
-          className="bg-red-500 hover:bg-red-400 text-white px-4 py-2 rounded"
-        >
-          Clear Search
-        </button>
+        {searchTerm && ( // Show button only when searchTerm is not empty
+          <button
+            onClick={() => setSearchTerm("")}
+            className="bg-red-500 hover:bg-red-400 text-white px-4 py-2 rounded"
+          >
+            Clear
+          </button>
+        )}
       </div>
+
       {/* Loading Message */}
       {loading ? (
         <p className="text-gray-500">Records loading...</p>
