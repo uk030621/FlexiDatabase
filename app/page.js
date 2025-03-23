@@ -2,6 +2,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -61,7 +62,7 @@ export default function Home() {
       <div className="mt-2 mb-6 px-4">
         <button
           onClick={() => setShowGuide(!showGuide)}
-          className="w-fit text-sm bg-slate-900 hover:bg-slate-600 text-white px-4 py-2 rounded text-center"
+          className="w-fit text-sm bg-slate-700 hover:bg-slate-500 text-white px-4 py-2 rounded text-center"
         >
           {showGuide ? "Hide User Guide ▴" : "User Guide ▾"}
         </button>
@@ -154,8 +155,15 @@ export default function Home() {
       ) : (
         <button
           onClick={() => signIn("google")}
-          className="text-sm px-4 py-2 bg-blue-700 hover:bg-blue-500 text-white rounded"
+          className="text-sm px-4 py-2 bg-blue-700 hover:bg-blue-500 text-white rounded flex items-center"
         >
+          <Image
+            src="/Goog.png" // Replace with the path to your Google logo
+            alt="Google logo"
+            width={30} // Set the width of the image
+            height={30} // Set the height of the image
+            className="rounded-md mr-2"
+          />
           Sign In with Google
         </button>
       )}
