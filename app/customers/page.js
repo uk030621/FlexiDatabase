@@ -10,6 +10,7 @@ export default function Customers() {
   const [editingCustomer, setEditingCustomer] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false); // To toggle the dropdown
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true); // Loading state
 
   // Fetch customers and fields
   useEffect(() => {
@@ -18,15 +19,19 @@ export default function Customers() {
   }, []);
 
   const fetchFields = async () => {
+    setLoading(true); // Set loading to true
     const response = await fetch("/api/fields", { method: "GET" });
     const data = await response.json();
     setFields(data);
+    setLoading(false); // Set loading to false after fetch
   };
 
   const fetchCustomers = async () => {
+    setLoading(true); // Set loading to true
     const response = await fetch("/api/customers", { method: "GET" });
     const data = await response.json();
     setCustomers(data);
+    setLoading(false); // Set loading to false after fetch
   };
 
   const handleInputChange = (e) => {
@@ -104,155 +109,171 @@ export default function Customers() {
     <div className="min-h-screen p-8 bg-gray-100">
       <Link
         href="/"
-        className="bg-black px-2 py-1 rounded-md mt-4 text-sm align-self text-white hover:underline"
+        className="bg-slate-800 px-2 py-1 rounded-md mt-4 text-sm align-self text-white hover:bg-slate-600"
       >
         Back
       </Link>
       <Link
         href="/fields"
-        className="bg-black px-2 py-1 ml-8 rounded-md mt-4 text-sm align-self text-white hover:underline"
+        className="bg-slate-800 px-2 py-1 ml-8 rounded-md mt-4 text-sm align-self text-white hover:bg-slate-600"
       >
         Go To Database Design
       </Link>
       <h1 className="text-3xl font-bold mt-4 mb-6">Database Records</h1>
 
       {/* Fast Search */}
-      <input
-        type="text"
-        placeholder="Search records..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="border p-2 rounded w-full mb-4"
-      />
-
-      {/* Toggleable Dropdown for Add/Edit Form */}
-      <div className="mb-6">
+      <div className="flex items-center gap-2 mb-4">
+        <input
+          type="text"
+          placeholder="Search records..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border p-2 rounded flex-grow"
+        />
         <button
-          onClick={() => {
-            setDropdownOpen(!dropdownOpen);
-            setEditingCustomer(null);
-            setFormData({});
-          }}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          onClick={() => setSearchTerm("")}
+          className="bg-red-500 hover:bg-red-400 text-white px-4 py-2 rounded"
         >
-          {dropdownOpen ? "Close Form ▴" : "New Record ▾"}
+          Clear Search
         </button>
-        {dropdownOpen && (
-          <div className="mt-4 bg-white shadow-lg rounded p-4">
-            <h2 className="text-xl font-semibold mb-4">
-              {editingCustomer ? "Edit Record" : "Add New Record"}
-            </h2>
-            <form onSubmit={editingCustomer ? updateCustomer : addCustomer}>
-              {fields.map((field) => (
-                <div key={field._id} className="mb-4">
-                  <label className="block text-gray-700">{field.label}</label>
-                  {field.type === "select" ? (
-                    <select
-                      name={field.name}
-                      value={formData[field.name] || ""}
-                      onChange={handleInputChange}
-                      className="border p-2 rounded w-full"
-                      required
-                    >
-                      <option value="">Select {field.label}</option>
-                      {field.options.map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : field.type === "textarea" ? (
-                    <textarea
-                      name={field.name}
-                      value={formData[field.name] || ""}
-                      onChange={handleInputChange}
-                      className="border p-2 rounded w-full"
-                      rows="4"
-                      required
-                    ></textarea>
-                  ) : (
-                    <input
-                      type={field.type || "text"}
-                      name={field.name}
-                      value={formData[field.name] || ""}
-                      onChange={handleInputChange}
-                      className="border p-2 rounded w-full"
-                      required
-                    />
-                  )}
-                </div>
-              ))}
-              <button
-                type="submit"
-                className="bg-green-500 text-white px-4 py-2 rounded mr-4"
-              >
-                {editingCustomer ? "Update Record" : "Add Record"}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setDropdownOpen(false);
-                  setEditingCustomer(null);
-                  setFormData({});
-                }}
-                className="bg-gray-500 text-white px-4 py-2 rounded"
-              >
-                Cancel
-              </button>
-            </form>
+      </div>
+      {/* Loading Message */}
+      {loading ? (
+        <p className="text-gray-500">Records loading...</p>
+      ) : (
+        <>
+          {/* Toggleable Dropdown for Add/Edit Form */}
+          <div className="mb-6">
+            <button
+              onClick={() => {
+                setDropdownOpen(!dropdownOpen);
+                setEditingCustomer(null);
+                setFormData({});
+              }}
+              className="bg-blue-800 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              {dropdownOpen ? "Close Form ▴" : "New Record ▾"}
+            </button>
+            {dropdownOpen && (
+              <div className="mt-4 bg-white shadow-lg rounded p-4">
+                <h2 className="text-xl font-semibold mb-4">
+                  {editingCustomer ? "Edit Record" : "Add New Record"}
+                </h2>
+                <form onSubmit={editingCustomer ? updateCustomer : addCustomer}>
+                  {fields.map((field) => (
+                    <div key={field._id} className="mb-4">
+                      <label className="block text-gray-700">
+                        {field.label}
+                      </label>
+                      {field.type === "select" ? (
+                        <select
+                          name={field.name}
+                          value={formData[field.name] || ""}
+                          onChange={handleInputChange}
+                          className="border p-2 rounded w-full"
+                          required
+                        >
+                          <option value="">Select {field.label}</option>
+                          {field.options.map((option, index) => (
+                            <option key={index} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      ) : field.type === "textarea" ? (
+                        <textarea
+                          name={field.name}
+                          value={formData[field.name] || ""}
+                          onChange={handleInputChange}
+                          className="border p-2 rounded w-full"
+                          rows="4"
+                          required
+                        ></textarea>
+                      ) : (
+                        <input
+                          type={field.type || "text"}
+                          name={field.name}
+                          value={formData[field.name] || ""}
+                          onChange={handleInputChange}
+                          className="border p-2 rounded w-full"
+                          required
+                        />
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    type="submit"
+                    className="bg-green-800 hover:bg-green-600 text-white px-4 py-2 rounded mr-4"
+                  >
+                    {editingCustomer ? "Update Record" : "Add Record"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      setEditingCustomer(null);
+                      setFormData({});
+                    }}
+                    className="bg-slate-800 hover:bg-slate-600 text-white px-4 py-2 rounded"
+                  >
+                    Cancel
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
-      {/* Responsive Customer Table */}
-      <h2 className="text-xl font-semibold mb-4">Records</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse bg-white rounded shadow">
-          <thead>
-            <tr>
-              {fields.map((field) => (
-                <th key={field._id} className="border p-2 text-left">
-                  {field.label}
-                </th>
-              ))}
-              <th className="border p-2 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCustomers.map((customer) => (
-              <tr key={customer._id}>
-                {fields.map((field) => (
-                  <td key={field._id} className="border p-2">
-                    {field.type === "date"
-                      ? formatDate(customer[field.name])
-                      : customer[field.name] || ""}
-                  </td>
+          {/* Responsive Customer Table */}
+          <h2 className="text-xl font-semibold mb-4">Records</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse bg-white rounded shadow">
+              <thead className="bg-slate-200">
+                <tr>
+                  {fields.map((field) => (
+                    <th key={field._id} className="border p-2 text-left">
+                      {field.label}
+                    </th>
+                  ))}
+                  <th className="bg-slate-200 border p-2 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCustomers.map((customer) => (
+                  <tr key={customer._id}>
+                    {fields.map((field) => (
+                      <td key={field._id} className="border p-2">
+                        {field.type === "date"
+                          ? formatDate(customer[field.name])
+                          : customer[field.name] || ""}
+                      </td>
+                    ))}
+                    <td className="border p-2">
+                      <div className="grid columns-1 gap-4">
+                        <button
+                          onClick={() => {
+                            setEditingCustomer(customer);
+                            setFormData(customer); // Pre-fill form data
+                            setDropdownOpen(true); // Open dropdown for editing
+                          }}
+                          className=""
+                        >
+                          ✍️
+                        </button>
+                        <button
+                          onClick={() => deleteCustomer(customer._id)}
+                          className=""
+                        >
+                          ❌
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 ))}
-                <td className="border p-2">
-                  <div className="grid columns-1 gap-4">
-                    <button
-                      onClick={() => {
-                        setEditingCustomer(customer);
-                        setFormData(customer); // Pre-fill form data
-                        setDropdownOpen(true); // Open dropdown for editing
-                      }}
-                      className=""
-                    >
-                      ✍️
-                    </button>
-                    <button
-                      onClick={() => deleteCustomer(customer._id)}
-                      className=""
-                    >
-                      ❌
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
     </div>
   );
 }

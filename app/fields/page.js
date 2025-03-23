@@ -73,13 +73,13 @@ export default function Fields() {
     <div className="min-h-screen p-8 bg-gray-100">
       <Link
         href="/"
-        className="bg-black px-2 py-1 rounded-md mt-4 text-sm align-self text-white hover:underline"
+        className="bg-slate-800 hover:bg-slate-600 px-2 py-1 rounded-md mt-4 text-sm align-self text-white"
       >
         Back
       </Link>
       <Link
         href="/customers"
-        className="bg-black px-2 py-1 ml-8 rounded-md mt-4 text-sm align-self text-white hover:underline"
+        className="bg-slate-800 hover:bg-slate-600 px-2 py-1 ml-8 rounded-md mt-4 text-sm align-self text-white"
       >
         Go To Database Records
       </Link>
@@ -136,7 +136,7 @@ export default function Fields() {
           )}
           <button
             type="submit"
-            className="bg-blue-500 text-white mt-3 px-4 py-2 rounded"
+            className="bg-blue-800 hover:bg-blue-600 text-white mt-3 px-4 py-2 rounded"
           >
             Add Field
           </button>
@@ -198,14 +198,14 @@ export default function Fields() {
           )}
           <button
             type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded mr-2 mt-3"
+            className="bg-green-800 hover:bg-green-600 text-white px-4 py-2 rounded mr-2 mt-3"
           >
             Update
           </button>
           <button
             type="button"
             onClick={() => setEditingField(null)}
-            className="bg-gray-500 text-white px-4 py-2 rounded"
+            className="bg-slate-800 hover:bg-slate-600 text-white px-4 py-2 rounded"
           >
             Cancel
           </button>

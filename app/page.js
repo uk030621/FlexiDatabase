@@ -4,13 +4,12 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [showGuide, setShowGuide] = useState(false);
   const [allowedEmails, setAllowedEmails] = useState([]);
   const [newEmail, setNewEmail] = useState("");
-  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || ""; // Admin email from environment variables
+  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "";
 
-  // Fetch the allowed emails from the server
   useEffect(() => {
     if (session?.user.email === adminEmail) {
       fetch("/api/emails")
@@ -20,7 +19,6 @@ export default function Home() {
     }
   }, [session, adminEmail]);
 
-  // Add a new email to the database
   const addEmail = async () => {
     if (!newEmail.trim()) return alert("Email cannot be empty.");
 
@@ -33,14 +31,12 @@ export default function Home() {
     if (response.ok) {
       const data = await response.json();
       setAllowedEmails(data.allowedEmails);
-      setNewEmail(""); // Clear the input field
+      setNewEmail("");
     } else {
       alert("Failed to add email.");
-      console.error("Failed to add email");
     }
   };
 
-  // Remove an email from the database
   const removeEmail = async (email) => {
     const response = await fetch("/api/emails", {
       method: "DELETE",
@@ -53,21 +49,19 @@ export default function Home() {
       setAllowedEmails(data.allowedEmails);
     } else {
       alert("Failed to remove email.");
-      console.error("Failed to remove email");
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col py-6 items-center justify-start bg-gray-100">
-      <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">
+      <h1 className="text-slate-900 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">
         Flexible Database System
       </h1>
 
-      {/* User Guide Dropdown */}
       <div className="mt-2 mb-6 px-4">
         <button
           onClick={() => setShowGuide(!showGuide)}
-          className="w-fit bg-blue-700 text-white px-4 py-2 rounded text-center"
+          className="w-fit text-sm bg-slate-900 hover:bg-slate-600 text-white px-4 py-2 rounded text-center"
         >
           {showGuide ? "Hide User Guide ▴" : "User Guide ▾"}
         </button>
@@ -82,28 +76,28 @@ export default function Home() {
                 securely.
               </li>
               <li>
-                <strong>Database Records:</strong> Navigate to the Database
-                Records page to view, add, edit, and delete customer records.
+                <strong>Database Records:</strong> Navigate to view, add, edit,
+                and delete records.
               </li>
               <li>
-                <strong>Database Design:</strong> Use the Database Design page
-                to add, edit, or delete fields dynamically.
+                <strong>Database Design:</strong> Modify fields dynamically.
               </li>
               <li>
-                <strong>Fast Search:</strong> Use the search bar on the Database
-                Records page to quickly find specific data.
+                <strong>Fast Search:</strong> Quickly find data using the search
+                bar.
               </li>
             </ul>
           </div>
         )}
       </div>
 
-      {session ? (
+      {status === "loading" ? (
+        <p>Loading...</p>
+      ) : session ? (
         <>
           <p>Welcome, {session.user.name}!</p>
-          {/* Admin-Only Email Management Section */}
           {session.user.email === adminEmail && (
-            <div className="mt-6 w-full max-w-md p-4 bg-white shadow-md rounded">
+            <div className="mt-6 w-fit max-w-md p-6 bg-white shadow-md rounded">
               <h2 className="text-lg font-bold mb-2">Manage Allowed Emails</h2>
               <ul className="mb-4">
                 {allowedEmails.map((email) => (
@@ -132,29 +126,27 @@ export default function Home() {
               />
               <button
                 onClick={addEmail}
-                className="bg-green-500 text-white px-4 py-2 rounded w-full"
+                className="bg-green-800 hover:bg-green-600 text-sm text-white px-4 py-2 rounded w-full"
               >
                 Add Email
               </button>
             </div>
           )}
-
           <div className="mt-4 space-x-4">
             <Link href="/customers">
-              <button className="px-4 py-2 bg-green-700 text-white rounded">
-                Database Records
+              <button className="text-sm px-4 py-2 bg-slate-700 hover:bg-slate-500 text-white rounded">
+                Records
               </button>
             </Link>
             <Link href="/fields">
-              <button className="px-4 py-2 bg-slate-900 text-white rounded">
-                Database Design
+              <button className="text-sm px-4 py-2 bg-slate-700 hover:bg-slate-500 text-white rounded">
+                Design
               </button>
             </Link>
           </div>
-
           <button
             onClick={() => signOut()}
-            className="mt-4 px-4 py-2 bg-red-700 text-white rounded"
+            className="text-sm mt-4 px-4 py-2 bg-red-700 hover:bg-red-500 text-white rounded"
           >
             Sign Out
           </button>
@@ -162,7 +154,7 @@ export default function Home() {
       ) : (
         <button
           onClick={() => signIn("google")}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          className="text-sm px-4 py-2 bg-blue-700 hover:bg-blue-500 text-white rounded"
         >
           Sign In with Google
         </button>
