@@ -106,7 +106,7 @@ export default function Customers() {
   );
 
   return (
-    <div className="min-h-screen p-8 bg-gray-100">
+    <div className="min-h-screen p-8 bg-gray-300">
       <Link
         href="/"
         className="bg-slate-800 px-2 py-1 rounded-md mt-4 text-sm align-self text-white hover:bg-slate-600"
@@ -128,7 +128,7 @@ export default function Customers() {
           placeholder="Search records..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 rounded flex-grow"
+          className="bg-white border p-2 rounded flex-grow"
         />
         {searchTerm && ( // Show button only when searchTerm is not empty
           <button

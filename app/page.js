@@ -53,7 +53,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col py-6 items-center justify-start bg-gray-100">
+    <div className="min-h-screen flex flex-col py-6 items-center justify-start bg-background">
       <h1 className="text-slate-900 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">
         Flexible Database System
       </h1>

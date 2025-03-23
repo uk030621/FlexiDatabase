@@ -70,7 +70,7 @@ export default function Fields() {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-100">
+    <div className="min-h-screen p-8 bg-gray-300">
       <Link
         href="/"
         className="bg-slate-800 hover:bg-slate-600 px-2 py-1 rounded-md mt-4 text-sm align-self text-white"
@@ -93,7 +93,7 @@ export default function Fields() {
             placeholder="Field Name"
             value={newField.name}
             onChange={(e) => setNewField({ ...newField, name: e.target.value })}
-            className="border p-2 rounded mr-2 mb-2"
+            className="bg-white border p-2 rounded mr-2 mb-2"
             required
           />
           <input
@@ -103,13 +103,13 @@ export default function Fields() {
             onChange={(e) =>
               setNewField({ ...newField, label: e.target.value })
             }
-            className="border p-2 rounded mr-2 mb-2"
+            className="bg-white border p-2 rounded mr-2 mb-2"
             required
           />
           <select
             value={newField.type}
             onChange={(e) => setNewField({ ...newField, type: e.target.value })}
-            className="border p-2 rounded mr-2"
+            className="bg-white border p-2 rounded mr-2"
           >
             <option value="text">Text</option>
             <option value="number">Number</option>
@@ -214,7 +214,7 @@ export default function Fields() {
 
       <h2 className="text-xl font-semibold mb-4">Field List</h2>
       <table className="w-full border-collapse bg-white rounded shadow">
-        <thead>
+        <thead className="bg-slate-200">
           <tr>
             <th className="border p-2">Field Name</th>
             <th className="border p-2">Label</th>
