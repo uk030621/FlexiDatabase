@@ -158,7 +158,7 @@ export default function Home() {
           className="text-sm px-4 py-2 bg-blue-700 hover:bg-blue-500 text-white rounded flex items-center"
         >
           <Image
-            src="/Goog.png" // Replace with the path to your Google logo
+            src="/G.png" // Replace with the path to your Google logo
             alt="Google logo"
             width={30} // Set the width of the image
             height={30} // Set the height of the image
