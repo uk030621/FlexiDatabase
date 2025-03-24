@@ -13,16 +13,34 @@ export default function Fields() {
   });
   const [editingField, setEditingField] = useState(null);
 
+  // Fetch all fields on initial render
   useEffect(() => {
     fetchFields();
   }, []);
 
+  // Automatically generate a unique Field Name when adding a new field
+  useEffect(() => {
+    if (!editingField) {
+      setNewField((prev) => ({
+        ...prev,
+        name: generateUniqueCode(), // Generate a unique Field Name
+      }));
+    }
+  }, [editingField]);
+
+  // Fetch existing fields from the server
   const fetchFields = async () => {
     const response = await fetch("/api/fields", { method: "GET" });
     const data = await response.json();
     setFields(data);
   };
 
+  // Function to generate a unique Field Name
+  const generateUniqueCode = () => {
+    return `field_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+  };
+
+  // Handle adding a new field
   const addField = async (e) => {
     e.preventDefault();
     const response = await fetch("/api/fields", {
@@ -33,12 +51,18 @@ export default function Fields() {
 
     if (response.ok) {
       await fetchFields();
-      setNewField({ name: "", label: "", type: "text", options: [] });
+      setNewField({
+        name: generateUniqueCode(),
+        label: "",
+        type: "text",
+        options: [],
+      });
     } else {
       console.error("Failed to add field");
     }
   };
 
+  // Handle updating an existing field
   const updateField = async (e) => {
     e.preventDefault();
     const response = await fetch("/api/fields", {
@@ -55,6 +79,7 @@ export default function Fields() {
     }
   };
 
+  // Handle deleting a field
   const deleteField = async (id, name) => {
     const response = await fetch("/api/fields", {
       method: "DELETE",
@@ -71,6 +96,7 @@ export default function Fields() {
 
   return (
     <div className="min-h-screen p-8 bg-gray-300">
+      {/* Navigation Links */}
       <Link
         href="/"
         className="bg-slate-800 hover:bg-slate-600 px-2 py-1 rounded-md mt-4 text-sm align-self text-white"
@@ -85,17 +111,10 @@ export default function Fields() {
       </Link>
       <h1 className="text-3xl font-bold mt-4 mb-6">Database Design</h1>
 
+      {/* Add New Field Form */}
       {!editingField && (
         <form onSubmit={addField} className="mb-6">
           <h2 className="text-xl font-semibold mb-4">Add New Field</h2>
-          <input
-            type="text"
-            placeholder="Field Name"
-            value={newField.name}
-            onChange={(e) => setNewField({ ...newField, name: e.target.value })}
-            className="bg-white border p-2 rounded mr-2 mb-2"
-            required
-          />
           <input
             type="text"
             placeholder="Label"
@@ -143,19 +162,10 @@ export default function Fields() {
         </form>
       )}
 
+      {/* Edit Field Form */}
       {editingField && (
         <form onSubmit={updateField} className="mb-6">
           <h2 className="text-xl font-semibold mb-4">Edit Field</h2>
-          <input
-            type="text"
-            placeholder="Field Name"
-            value={editingField.name}
-            onChange={(e) =>
-              setEditingField({ ...editingField, name: e.target.value })
-            }
-            className="border p-2 rounded mr-2 mb-2"
-            required
-          />
           <input
             type="text"
             placeholder="Label"
@@ -212,11 +222,12 @@ export default function Fields() {
         </form>
       )}
 
+      {/* Field List */}
       <h2 className="text-xl font-semibold mb-4">Field List</h2>
       <table className="w-full border-collapse bg-white rounded shadow">
         <thead className="bg-slate-200">
           <tr>
-            <th className="border p-2">Field Name</th>
+            {/* Removed Field Name Column */}
             <th className="border p-2">Label</th>
             <th className="border p-2">Type</th>
             <th className="border p-2">Actions</th>
@@ -225,7 +236,7 @@ export default function Fields() {
         <tbody>
           {fields.map((field) => (
             <tr key={field._id}>
-              <td className="border p-2">{field.name}</td>
+              {/* Removed Field Name Cell */}
               <td className="border p-2">{field.label}</td>
               <td className="border p-2">{field.type}</td>
               <td className="border p-2">
