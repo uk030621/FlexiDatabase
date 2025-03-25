@@ -62,7 +62,7 @@ export default function Home() {
       <div className="mt-2 mb-6 px-4">
         <button
           onClick={() => setShowGuide(!showGuide)}
-          className="w-fit text-sm bg-slate-700 hover:bg-slate-500 text-white px-4 py-2 rounded text-center"
+          className="w-fit text-sm bg-green-800 hover:bg-green-600 text-white px-14 py-1 rounded text-center"
         >
           {showGuide ? "Hide User Guide ▴" : "User Guide ▾"}
         </button>

@@ -1,3 +1,4 @@
+//app/customers/page.js
 "use client";
 
 import { useEffect, useState } from "react";
@@ -227,7 +228,7 @@ export default function Customers() {
           </div>
 
           {/* Responsive Customer Table */}
-          <h2 className="text-xl font-semibold mb-4">Records</h2>
+          <h2 className="text-xl font-semibold mb-2">Records</h2>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse bg-white rounded shadow">
               <thead className="bg-slate-200">
@@ -245,9 +246,28 @@ export default function Customers() {
                   <tr key={customer._id}>
                     {fields.map((field) => (
                       <td key={field._id} className="border p-2">
-                        {field.type === "date"
-                          ? formatDate(customer[field.name])
-                          : customer[field.name] || ""}
+                        {/* Make email clickable */}
+                        {field.type === "email" ? (
+                          <a
+                            href={`mailto:${customer[field.name]}`}
+                            className="text-blue-600 underline"
+                          >
+                            {customer[field.name]}
+                          </a>
+                        ) : field.type === "url" ? (
+                          <a
+                            href={customer[field.name]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline"
+                          >
+                            {customer[field.name]}
+                          </a>
+                        ) : field.type === "date" ? (
+                          formatDate(customer[field.name])
+                        ) : (
+                          customer[field.name] || ""
+                        )}
                       </td>
                     ))}
                     <td className="border p-2">

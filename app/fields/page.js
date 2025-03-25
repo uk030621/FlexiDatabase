@@ -1,3 +1,4 @@
+//app/fields/page.js
 "use client";
 
 import { useEffect, useState } from "react";
@@ -115,6 +116,8 @@ export default function Fields() {
       {!editingField && (
         <form onSubmit={addField} className="mb-6">
           <h2 className="text-xl font-semibold mb-4">Add New Field</h2>
+
+          {/* Field Label Input */}
           <input
             type="text"
             placeholder="Label"
@@ -125,6 +128,8 @@ export default function Fields() {
             className="bg-white border p-2 rounded mr-2 mb-2"
             required
           />
+
+          {/* Field Type Selection */}
           <select
             value={newField.type}
             onChange={(e) => setNewField({ ...newField, type: e.target.value })}
@@ -136,7 +141,10 @@ export default function Fields() {
             <option value="date">Date</option>
             <option value="textarea">Long Text</option>
             <option value="select">Dropdown</option>
+            <option value="url">URL</option> {/* 👈 Added URL option */}
           </select>
+
+          {/* Input for Dropdown Options */}
           {newField.type === "select" && (
             <div>
               <input
@@ -153,6 +161,38 @@ export default function Fields() {
               />
             </div>
           )}
+
+          {/* Input for URL */}
+          {newField.type === "url" && (
+            <div>
+              <input
+                type="text"
+                placeholder="Enter A Test URL"
+                value={newField.value || ""}
+                onChange={(e) =>
+                  setNewField({ ...newField, value: e.target.value })
+                }
+                className="border p-2 rounded w-full mt-2"
+                required
+              />
+              {/* Display the clickable URL preview */}
+              {newField.value && (
+                <p className="mt-2">
+                  Preview:{" "}
+                  <a
+                    href={newField.value}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    {newField.value}
+                  </a>
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Add Field Button */}
           <button
             type="submit"
             className="bg-blue-800 hover:bg-blue-600 text-white mt-3 px-4 py-2 rounded"
@@ -189,7 +229,10 @@ export default function Fields() {
             <option value="date">Date</option>
             <option value="textarea">Long Text</option>
             <option value="select">Dropdown</option>
+            <option value="url">URL</option> {/* 👈 Added URL option */}
           </select>
+
+          {/* Input for Dropdown Options */}
           {editingField.type === "select" && (
             <div>
               <input
@@ -206,6 +249,37 @@ export default function Fields() {
               />
             </div>
           )}
+
+          {/* Input for URL */}
+          {editingField.type === "url" && (
+            <div>
+              <input
+                type="text"
+                placeholder="Enter A Test URL"
+                value={editingField.value || ""}
+                onChange={(e) =>
+                  setEditingField({ ...editingField, value: e.target.value })
+                }
+                className="border p-2 rounded w-full mt-2"
+                required
+              />
+              {/* Display the clickable URL preview */}
+              {editingField.value && (
+                <p className="mt-2">
+                  Preview:{" "}
+                  <a
+                    href={editingField.value}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    {editingField.value}
+                  </a>
+                </p>
+              )}
+            </div>
+          )}
+
           <button
             type="submit"
             className="bg-green-800 hover:bg-green-600 text-white px-4 py-2 rounded mr-2 mt-3"
@@ -223,7 +297,7 @@ export default function Fields() {
       )}
 
       {/* Field List */}
-      <h2 className="text-xl font-semibold mb-4">Field List</h2>
+      <h2 className="text-xl font-semibold mb-2">Field List</h2>
       <table className="w-full border-collapse bg-white rounded shadow">
         <thead className="bg-slate-200">
           <tr>
