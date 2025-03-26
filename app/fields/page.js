@@ -114,10 +114,10 @@ export default function Fields() {
       <div className="flex items-center gap-1 mt-4 mb-4">
         <h1 className="text-3xl font-bold mt-4 mb-6">Database Design</h1>
         <Image
-          src="/Tdb.png" // Replace with your image path
+          src="/Adb.png" // Replace with your image path
           alt="Database Icon"
-          width={50} // Adjust width as needed
-          height={50} // Adjust height as needed
+          width={40} // Adjust width as needed
+          height={40} // Adjust height as needed
           className="bg-transparent"
         />
       </div>
