@@ -133,7 +133,7 @@ export default function Fields() {
           <select
             value={newField.type}
             onChange={(e) => setNewField({ ...newField, type: e.target.value })}
-            className="bg-white border p-2 rounded mr-2"
+            className="bg-yellow-100 border p-2 rounded mr-2"
           >
             <option value="text">Text</option>
             <option value="number">Number</option>
@@ -146,7 +146,7 @@ export default function Fields() {
 
           {/* Input for Dropdown Options */}
           {newField.type === "select" && (
-            <div>
+            <div className="">
               <input
                 type="text"
                 placeholder="Comma-separated options"
@@ -205,7 +205,7 @@ export default function Fields() {
       {/* Edit Field Form */}
       {editingField && (
         <form onSubmit={updateField} className="mb-6">
-          <h2 className="text-xl font-semibold mb-4">Edit Field</h2>
+          <h2 className="mb-1 text-xl font-semibold ">Edit Field</h2>
           <input
             type="text"
             placeholder="Label"
@@ -213,7 +213,7 @@ export default function Fields() {
             onChange={(e) =>
               setEditingField({ ...editingField, label: e.target.value })
             }
-            className="border p-2 rounded mr-2 mb-2"
+            className="bg-white border p-2 rounded mr-2 mb-2"
             required
           />
           <select
@@ -245,7 +245,7 @@ export default function Fields() {
                     options: e.target.value.split(",").map((opt) => opt.trim()),
                   })
                 }
-                className="border p-2 rounded w-full mt-2"
+                className="bg-white border p-2 rounded w-full mt-2"
               />
             </div>
           )}
