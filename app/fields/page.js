@@ -221,7 +221,7 @@ export default function Fields() {
             onChange={(e) =>
               setEditingField({ ...editingField, type: e.target.value })
             }
-            className="border p-2 rounded mr-2"
+            className="bg-yellow-100 border p-2 rounded mr-2"
           >
             <option value="text">Text</option>
             <option value="number">Number</option>
