@@ -115,7 +115,7 @@ export default function Fields() {
       {/* Add New Field Form */}
       {!editingField && (
         <form onSubmit={addField} className="mb-6">
-          <h2 className="text-xl font-semibold mb-4">Add New Field</h2>
+          <h2 className="text-xl font-semibold ">Add New Label</h2>
 
           {/* Field Label Input */}
           <input
@@ -164,11 +164,11 @@ export default function Fields() {
 
           {/* Input for URL */}
           {newField.type === "url" && (
-            <div>
+            <div className="hidden">
               <input
                 type="text"
                 placeholder="Enter A Test URL"
-                value={newField.value || ""}
+                value={newField.value || "Dummy"}
                 onChange={(e) =>
                   setNewField({ ...newField, value: e.target.value })
                 }
@@ -252,11 +252,11 @@ export default function Fields() {
 
           {/* Input for URL */}
           {editingField.type === "url" && (
-            <div>
+            <div className="hidden">
               <input
                 type="text"
                 placeholder="Enter A Test URL"
-                value={editingField.value || ""}
+                value={editingField.value || "Dummy"}
                 onChange={(e) =>
                   setEditingField({ ...editingField, value: e.target.value })
                 }
