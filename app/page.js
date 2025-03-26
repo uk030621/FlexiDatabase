@@ -62,7 +62,7 @@ export default function Home() {
       <div className="mt-2 mb-6 px-4">
         <button
           onClick={() => setShowGuide(!showGuide)}
-          className="w-fit text-sm bg-green-800 hover:bg-green-600 text-white px-14 py-1 rounded text-center"
+          className="w-fit text-sm bg-green-800 hover:bg-green-600 text-white px-14 py-2 rounded text-center"
         >
           {showGuide ? "Hide User Guide ▴" : "User Guide ▾"}
         </button>
@@ -98,8 +98,10 @@ export default function Home() {
         <>
           <p>Welcome, {session.user.name}!</p>
           {session.user.email === adminEmail && (
-            <div className="mt-6 w-fit max-w-md p-6 bg-white shadow-md rounded">
-              <h2 className="text-lg font-bold mb-2">Manage Allowed Emails</h2>
+            <div className="mt-6 w-fit max-w-md p-6 bg-yellow-100 border-2 shadow-md rounded">
+              <h2 className="text-lg font-bold mb-2">
+                Admin - Manage Allowed Emails
+              </h2>
               <ul className="mb-4">
                 {allowedEmails.map((email) => (
                   <li
@@ -123,7 +125,7 @@ export default function Home() {
                 placeholder="Enter email"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
-                className="border p-2 rounded w-full mb-2"
+                className="bg-white border p-2 rounded w-full mb-2"
               />
               <button
                 onClick={addEmail}

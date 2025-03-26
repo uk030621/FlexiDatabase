@@ -107,16 +107,16 @@ export default function Customers() {
   );
 
   return (
-    <div className="min-h-screen p-8 bg-gray-300">
+    <div className="min-h-screen p-8  bg-background">
       <Link
         href="/"
-        className="bg-slate-800 px-2 py-1 rounded-md mt-4 text-sm align-self text-white hover:bg-slate-600"
+        className="bg-blue-800 px-2 py-2 rounded-md mt-4 text-sm align-self text-white hover:bg-blue-600"
       >
         Back
       </Link>
       <Link
         href="/fields"
-        className="bg-slate-800 px-2 py-1 ml-8 rounded-md mt-4 text-sm align-self text-white hover:bg-slate-600"
+        className="bg-blue-800 px-2 py-2 ml-8 rounded-md mt-4 text-sm align-self text-white hover:bg-blue-600"
       >
         Go To Database Design
       </Link>

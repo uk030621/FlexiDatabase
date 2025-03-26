@@ -96,17 +96,17 @@ export default function Fields() {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-300">
+    <div className="min-h-screen p-8 bg-background">
       {/* Navigation Links */}
       <Link
         href="/"
-        className="bg-slate-800 hover:bg-slate-600 px-2 py-1 rounded-md mt-4 text-sm align-self text-white"
+        className="bg-blue-800 hover:bg-blue-600 px-2 py-2 rounded-md mt-4 text-sm align-self text-white"
       >
         Back
       </Link>
       <Link
         href="/customers"
-        className="bg-slate-800 hover:bg-slate-600 px-2 py-1 ml-8 rounded-md mt-4 text-sm align-self text-white"
+        className="bg-blue-800 hover:bg-blue-600 px-2 py-2 ml-8 rounded-md mt-4 text-sm align-self text-white"
       >
         Go To Database Records
       </Link>
@@ -115,7 +115,7 @@ export default function Fields() {
       {/* Add New Field Form */}
       {!editingField && (
         <form onSubmit={addField} className="mb-6">
-          <h2 className="text-xl font-semibold ">Add New Label</h2>
+          <h2 className="mb-1 text-xl font-semibold ">Add New Label</h2>
 
           {/* Field Label Input */}
           <input
