@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Fields() {
   const [fields, setFields] = useState([]);
@@ -110,8 +111,16 @@ export default function Fields() {
       >
         Go To Database Records
       </Link>
-      <h1 className="text-3xl font-bold mt-4 mb-6">Database Design</h1>
-
+      <div className="flex items-center gap-1 mt-4 mb-4">
+        <h1 className="text-3xl font-bold mt-4 mb-6">Database Design</h1>
+        <Image
+          src="/Tdb.png" // Replace with your image path
+          alt="Database Icon"
+          width={50} // Adjust width as needed
+          height={50} // Adjust height as needed
+          className="bg-transparent"
+        />
+      </div>
       {/* Add New Field Form */}
       {!editingField && (
         <form onSubmit={addField} className="mb-6">

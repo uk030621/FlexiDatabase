@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Customers() {
   const [customers, setCustomers] = useState([]);
@@ -120,8 +121,17 @@ export default function Customers() {
       >
         Go To Database Design
       </Link>
-      <h1 className="text-3xl font-bold mt-4 mb-6">Database Records</h1>
 
+      <div className="flex items-center gap-1 mt-4 mb-4">
+        <h1 className=" text-3xl font-bold">Database Records</h1>
+        <Image
+          src="/Adb.png" // Replace with your image path
+          alt="Database Icon"
+          width={40} // Adjust width as needed
+          height={40} // Adjust height as needed
+          className="bg-transparent"
+        />
+      </div>
       {/* Fast Search */}
       <div className="flex items-center gap-2 mb-4">
         <input

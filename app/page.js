@@ -58,11 +58,17 @@ export default function Home() {
       <h1 className="text-slate-900 text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">
         Flexible Database System
       </h1>
-
+      <Image
+        src="/Adb.png" // Replace with your image path
+        alt="Database Icon"
+        width={150} // Adjust width as needed
+        height={150} // Adjust height as needed
+        className="bg-transparent mb-4 mt-4"
+      />
       <div className="mt-2 mb-6 px-4">
         <button
           onClick={() => setShowGuide(!showGuide)}
-          className="w-fit text-sm bg-green-800 hover:bg-green-600 text-white px-14 py-2 rounded text-center"
+          className="w-fit text-sm bg-slate-900 hover:bg-slate-600 text-white px-14 py-2 rounded text-center"
         >
           {showGuide ? "Hide User Guide ▴" : "User Guide ▾"}
         </button>
