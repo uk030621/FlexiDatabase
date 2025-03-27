@@ -293,7 +293,14 @@ export default function Customers() {
                           ✍️
                         </button>
                         <button
-                          onClick={() => deleteCustomer(customer._id)}
+                          onClick={() => {
+                            const confirmed = window.confirm(
+                              `Are you sure you want to delete this record?`
+                            );
+                            if (confirmed) {
+                              deleteCustomer(customer._id);
+                            }
+                          }}
                           className=""
                         >
                           ❌

@@ -319,7 +319,6 @@ export default function Fields() {
         <tbody>
           {fields.map((field) => (
             <tr key={field._id}>
-              {/* Removed Field Name Cell */}
               <td className="border p-2">{field.label}</td>
               <td className="border p-2">{field.type}</td>
               <td className="border p-2">
@@ -328,7 +327,14 @@ export default function Fields() {
                     ✍️
                   </button>
                   <button
-                    onClick={() => deleteField(field._id, field.name)}
+                    onClick={() => {
+                      const confirmed = window.confirm(
+                        `Are you sure you want to delete the field "${field.label}"?`
+                      );
+                      if (confirmed) {
+                        deleteField(field._id, field.name);
+                      }
+                    }}
                     className=""
                   >
                     ❌
