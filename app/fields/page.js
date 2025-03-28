@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 export default function Fields() {
   const [fields, setFields] = useState([]);
@@ -94,6 +95,24 @@ export default function Fields() {
     } else {
       console.error("Failed to delete field");
     }
+  };
+
+  // Handle drag-and-drop reordering
+  const onDragEnd = async (result) => {
+    if (!result.destination) return;
+
+    const reorderedFields = [...fields];
+    const [movedItem] = reorderedFields.splice(result.source.index, 1);
+    reorderedFields.splice(result.destination.index, 0, movedItem);
+
+    setFields(reorderedFields);
+
+    // Optionally update the order in the backend
+    await fetch("/api/fields/reorder", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(reorderedFields),
+    });
   };
 
   return (
@@ -306,45 +325,60 @@ export default function Fields() {
       )}
 
       {/* Field List */}
-      <h2 className="text-xl font-semibold mb-2">Field List</h2>
-      <table className="w-full border-collapse bg-white rounded shadow">
-        <thead className="bg-slate-200">
-          <tr>
-            {/* Removed Field Name Column */}
-            <th className="border p-2">Label</th>
-            <th className="border p-2">Type</th>
-            <th className="border p-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {fields.map((field) => (
-            <tr key={field._id}>
-              <td className="border p-2">{field.label}</td>
-              <td className="border p-2">{field.type}</td>
-              <td className="border p-2">
-                <div className="grid columns-1 gap-4">
-                  <button onClick={() => setEditingField(field)} className="">
-                    ✍️
-                  </button>
-                  <button
-                    onClick={() => {
-                      const confirmed = window.confirm(
-                        `Are you sure you want to delete the field "${field.label}"?`
-                      );
-                      if (confirmed) {
-                        deleteField(field._id, field.name);
-                      }
-                    }}
-                    className=""
+      <h2 className="text-xl font-semibold mb-2">
+        Field List (Drag to Reorder)
+      </h2>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="fields">
+          {(provided) => (
+            <table
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="w-full border-collapse bg-white rounded shadow"
+            >
+              <thead className="bg-slate-200">
+                <tr>
+                  <th className="border p-2">Label</th>
+                  <th className="border p-2">Type</th>
+                  <th className="border p-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {fields.map((field, index) => (
+                  <Draggable
+                    key={field._id}
+                    draggableId={field._id}
+                    index={index}
                   >
-                    ❌
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                    {(provided) => (
+                      <tr
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className="hover:bg-gray-100 cursor-pointer"
+                      >
+                        <td className="border p-2">{field.label}</td>
+                        <td className="border p-2">{field.type}</td>
+                        <td className="border p-2">
+                          <button onClick={() => setEditingField(field)}>
+                            ✍️
+                          </button>
+                          <button
+                            onClick={() => deleteField(field._id, field.name)}
+                          >
+                            ❌
+                          </button>
+                        </td>
+                      </tr>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </tbody>
+            </table>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }
