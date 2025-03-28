@@ -83,35 +83,79 @@ export async function PUT(req) {
 // Delete a field
 export async function DELETE(req) {
   const session = await getServerSession(authOptions);
-  if (!session) return new Response("Unauthorized", { status: 401 });
-
-  const client = await clientPromise;
-  const db = client.db(DB_NAME);
-  const { id, name } = await req.json(); // Ensure `name` is also passed
+  if (!session) {
+    console.error("❌ Unauthorized request");
+    return new Response("Unauthorized", { status: 401 });
+  }
 
   try {
-    // Remove the field from the fields collection
-    const result = await db
-      .collection(FIELDCOLLECTION_NAME)
-      .deleteOne({ _id: new ObjectId(id) });
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+    const { id, name } = await req.json();
 
-    if (result.deletedCount === 0) {
+    console.log("📩 Received DELETE request body:", { id, name });
+
+    if (!id) {
+      console.error("❌ Missing ID in request");
+      return new Response(JSON.stringify({ error: "Missing field ID" }), {
+        status: 400,
+      });
+    }
+
+    // 🌟 Log the current database state
+    const allFields = await db
+      .collection(FIELDCOLLECTION_NAME)
+      .find({})
+      .toArray();
+    console.log("📋 All fields in DB before deletion:", allFields);
+
+    // 🚀 Log the type of the received `id` and compare it to the `_id` field
+    console.log("🚀 DELETE request id type:", typeof id);
+    if (allFields.length > 0) {
+      console.log("🚀 Sample DB field _id type:", typeof allFields[0]._id);
+    }
+
+    // 🛠 Determine the query type dynamically
+    const query =
+      typeof allFields[0]._id === "string"
+        ? { _id: id }
+        : { _id: new ObjectId(id) };
+    console.log("🔎 Searching for field with query:", query);
+
+    // ✅ Check if the field exists
+    const field = await db.collection(FIELDCOLLECTION_NAME).findOne(query);
+
+    if (!field) {
+      console.error("❌ Field not found in DB:", id);
       return new Response(JSON.stringify({ error: "Field not found" }), {
         status: 404,
       });
     }
 
-    // Remove the field from all existing customers
-    await db
-      .collection(CUSTOMER_COLLECTION_NAME)
-      .updateMany({}, { $unset: { [name]: "" } });
+    // ✅ Delete the field
+    const result = await db.collection(FIELDCOLLECTION_NAME).deleteOne(query);
 
+    if (result.deletedCount === 0) {
+      console.error("❌ Field deletion failed:", id);
+      return new Response(JSON.stringify({ error: "Field not found" }), {
+        status: 404,
+      });
+    }
+
+    // 🌟 Log the database state after deletion
+    const updatedFields = await db
+      .collection(FIELDCOLLECTION_NAME)
+      .find({})
+      .toArray();
+    console.log("📋 All fields in DB after deletion:", updatedFields);
+
+    console.log("✅ Field deleted successfully:", id);
     return new Response(
       JSON.stringify({ message: "Field deleted successfully" }),
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error deleting field:", error);
+    console.error("🔥 Error deleting field:", error);
     return new Response(JSON.stringify({ error: "Failed to delete field" }), {
       status: 500,
     });

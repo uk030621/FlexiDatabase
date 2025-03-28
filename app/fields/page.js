@@ -360,14 +360,27 @@ export default function Fields() {
                         <td className="border p-2">{field.label}</td>
                         <td className="border p-2">{field.type}</td>
                         <td className="border p-2">
-                          <button onClick={() => setEditingField(field)}>
-                            ✍️
-                          </button>
-                          <button
-                            onClick={() => deleteField(field._id, field.name)}
-                          >
-                            ❌
-                          </button>
+                          <div className="grid columns-1 gap-4">
+                            <button
+                              onClick={() => setEditingField(field)}
+                              className=""
+                            >
+                              ✍️
+                            </button>
+                            <button
+                              onClick={() => {
+                                const confirmed = window.confirm(
+                                  `Are you sure you want to delete the "${field.label}" field? This action cannot be undone.`
+                                );
+                                if (confirmed) {
+                                  deleteField(field._id, field.name);
+                                }
+                              }}
+                              className=""
+                            >
+                              ❌
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     )}
