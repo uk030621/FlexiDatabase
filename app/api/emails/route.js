@@ -69,20 +69,40 @@ export async function DELETE(req) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  if (email !== adminEmail) {
-    await db.collection(ALLOWED_EMAIL_COLLECTION_NAME).deleteOne({ email });
-    console.log(`Email removed: ${email}`);
-  }
+  try {
+    // 🌟 Step 1: Remove email from allowedEmails collection
+    if (email !== adminEmail) {
+      await db.collection(ALLOWED_EMAIL_COLLECTION_NAME).deleteOne({ email });
+      console.log(`Email removed from allowedEmails: ${email}`);
+    }
 
-  const updatedEmails = await db
-    .collection(ALLOWED_EMAIL_COLLECTION_NAME)
-    .find({})
-    .toArray();
-  return new Response(
-    JSON.stringify({
-      message: "Email removed successfully",
-      allowedEmails: updatedEmails.map((email) => email.email),
-    }),
-    { status: 200 }
-  );
+    // 🌟 Step 2: Remove user from users collection
+    const userDeletionResult = await db
+      .collection("users")
+      .deleteOne({ email });
+    if (userDeletionResult.deletedCount > 0) {
+      console.log(`User removed from users collection: ${email}`);
+    } else {
+      console.log(`User not found in users collection: ${email}`);
+    }
+
+    // 🌟 Step 3: Return updated allowedEmails
+    const updatedEmails = await db
+      .collection(ALLOWED_EMAIL_COLLECTION_NAME)
+      .find({})
+      .toArray();
+    return new Response(
+      JSON.stringify({
+        message: "Email and user removed successfully",
+        allowedEmails: updatedEmails.map((email) => email.email),
+      }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("🔥 Error while deleting email and user:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to remove email and user" }),
+      { status: 500 }
+    );
+  }
 }
