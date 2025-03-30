@@ -142,14 +142,14 @@ export default function Home() {
             </div>
           )}
           <div className="mt-4 space-x-4">
-            <Link href="/customers">
-              <button className="text-sm px-4 py-2 bg-slate-700 hover:bg-slate-500 text-white rounded">
-                Records
-              </button>
-            </Link>
             <Link href="/fields">
               <button className="text-sm px-4 py-2 bg-slate-700 hover:bg-slate-500 text-white rounded">
                 Design
+              </button>
+            </Link>
+            <Link href="/customers">
+              <button className="text-sm px-4 py-2 bg-slate-700 hover:bg-slate-500 text-white rounded">
+                Records
               </button>
             </Link>
           </div>
