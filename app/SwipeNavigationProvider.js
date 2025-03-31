@@ -10,7 +10,7 @@ const SwipeNavigationProvider = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Function to check if the swipe started inside a scrollable container
+  // Function to check if swipe started inside a scrollable container
   const isInsideScrollable = (target) =>
     target.closest(".overflow-x-auto") !== null;
 
@@ -37,7 +37,7 @@ const SwipeNavigationProvider = ({ children }) => {
     onSwipedRight: (event) => {
       if (!isInsideScrollable(event.event.target)) navigateTo("right");
     },
-    preventScrollOnSwipe: true,
+    preventScrollOnSwipe: false, // ✅ Allow normal scrolling
     trackMouse: true,
   });
 
