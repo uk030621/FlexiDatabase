@@ -102,28 +102,23 @@ export async function DELETE(req) {
       });
     }
 
-    // 🌟 Log the current database state
-    const allFields = await db
-      .collection(FIELDCOLLECTION_NAME)
-      .find({})
-      .toArray();
-    console.log("📋 All fields in DB before deletion:", allFields);
-
-    // 🚀 Log the type of the received `id` and compare it to the `_id` field
-    console.log("🚀 DELETE request id type:", typeof id);
-    if (allFields.length > 0) {
-      console.log("🚀 Sample DB field _id type:", typeof allFields[0]._id);
+    let objectId;
+    if (ObjectId.isValid(id)) {
+      objectId = new ObjectId(id); // Convert valid string to ObjectId
     }
 
-    // 🛠 Determine the query type dynamically
-    const query =
-      typeof allFields[0]._id === "string"
-        ? { _id: id }
-        : { _id: new ObjectId(id) };
-    console.log("🔎 Searching for field with query:", query);
+    console.log(
+      "🚀 Searching for field with queries:",
+      [
+        { _id: id }, // If stored as string
+        objectId ? { _id: objectId } : null, // If stored as ObjectId
+      ].filter(Boolean)
+    );
 
-    // ✅ Check if the field exists
-    const field = await db.collection(FIELDCOLLECTION_NAME).findOne(query);
+    // ✅ Query using BOTH string and ObjectId formats
+    const field = await db.collection(FIELDCOLLECTION_NAME).findOne({
+      $or: [{ _id: id }, objectId ? { _id: objectId } : null].filter(Boolean),
+    });
 
     if (!field) {
       console.error("❌ Field not found in DB:", id);
@@ -132,8 +127,10 @@ export async function DELETE(req) {
       });
     }
 
-    // ✅ Delete the field
-    const result = await db.collection(FIELDCOLLECTION_NAME).deleteOne(query);
+    // ✅ Delete using the same $or query
+    const result = await db.collection(FIELDCOLLECTION_NAME).deleteOne({
+      $or: [{ _id: id }, objectId ? { _id: objectId } : null].filter(Boolean),
+    });
 
     if (result.deletedCount === 0) {
       console.error("❌ Field deletion failed:", id);
@@ -141,13 +138,6 @@ export async function DELETE(req) {
         status: 404,
       });
     }
-
-    // 🌟 Log the database state after deletion
-    const updatedFields = await db
-      .collection(FIELDCOLLECTION_NAME)
-      .find({})
-      .toArray();
-    console.log("📋 All fields in DB after deletion:", updatedFields);
 
     console.log("✅ Field deleted successfully:", id);
     return new Response(
