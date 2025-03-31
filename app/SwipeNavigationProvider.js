@@ -10,6 +10,17 @@ const SwipeNavigationProvider = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
 
+  // Function to check if swipe started inside a scrollable container
+  const isInsideScrollable = (element) => {
+    while (element) {
+      if (element.classList?.contains("overflow-x-auto")) {
+        return true; // Prevent page swipe
+      }
+      element = element.parentElement;
+    }
+    return false;
+  };
+
   // Function to navigate between pages
   const navigateTo = useCallback(
     (direction) => {
@@ -22,13 +33,22 @@ const SwipeNavigationProvider = ({ children }) => {
         router.push(pages[currentIndex - 1]);
       }
     },
-    [pathname, router] // Dependencies to ensure consistency
+    [pathname, router]
   );
 
   // Handle swipe gestures
   const handlers = useSwipeable({
-    onSwipedLeft: () => navigateTo("left"),
-    onSwipedRight: () => navigateTo("right"),
+    onSwiping: (event) => {
+      if (isInsideScrollable(event.event.target)) {
+        event.event.stopPropagation(); // Stop page swipe if inside scrollable
+      }
+    },
+    onSwipedLeft: (event) => {
+      if (!isInsideScrollable(event.event.target)) navigateTo("left");
+    },
+    onSwipedRight: (event) => {
+      if (!isInsideScrollable(event.event.target)) navigateTo("right");
+    },
     preventScrollOnSwipe: true,
     trackMouse: true,
   });
@@ -45,7 +65,7 @@ const SwipeNavigationProvider = ({ children }) => {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [navigateTo]); // ✅ Now navigateTo is correctly included as a dependency
+  }, [navigateTo]);
 
   return (
     <div {...handlers} className="h-full w-full">
