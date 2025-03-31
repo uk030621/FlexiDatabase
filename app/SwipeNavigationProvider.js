@@ -10,16 +10,9 @@ const SwipeNavigationProvider = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Function to check if swipe started inside a scrollable container
-  const isInsideScrollable = (element) => {
-    while (element) {
-      if (element.classList?.contains("overflow-x-auto")) {
-        return true; // Prevent page swipe
-      }
-      element = element.parentElement;
-    }
-    return false;
-  };
+  // Function to check if the swipe started inside a scrollable container
+  const isInsideScrollable = (target) =>
+    target.closest(".overflow-x-auto") !== null;
 
   // Function to navigate between pages
   const navigateTo = useCallback(
@@ -38,11 +31,6 @@ const SwipeNavigationProvider = ({ children }) => {
 
   // Handle swipe gestures
   const handlers = useSwipeable({
-    onSwiping: (event) => {
-      if (isInsideScrollable(event.event.target)) {
-        event.event.stopPropagation(); // Stop page swipe if inside scrollable
-      }
-    },
     onSwipedLeft: (event) => {
       if (!isInsideScrollable(event.event.target)) navigateTo("left");
     },
