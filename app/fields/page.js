@@ -16,6 +16,10 @@ export default function Fields() {
   });
   const [editingField, setEditingField] = useState(null);
 
+  // ✨ New: Temporary input values for "select" fields
+  const [newFieldTempValue, setNewFieldTempValue] = useState("");
+  const [editingFieldTempValue, setEditingFieldTempValue] = useState("");
+
   // Fetch all fields on initial render
   useEffect(() => {
     fetchFields();
@@ -161,7 +165,7 @@ export default function Fields() {
           <select
             value={newField.type}
             onChange={(e) => setNewField({ ...newField, type: e.target.value })}
-            className="bg-yellow-100 border p-2 rounded mr-2"
+            className="bg-yellow-100 border p-2 rounded mr-2 w-24"
           >
             <option value="text">Text</option>
             <option value="number">Number</option>
@@ -174,48 +178,52 @@ export default function Fields() {
 
           {/* Input for Dropdown Options */}
           {newField.type === "select" && (
-            <div className="">
+            <div>
               <input
                 type="text"
-                placeholder="Comma-separated options"
-                value={newField.options.join(", ")}
-                onChange={(e) =>
-                  setNewField({
-                    ...newField,
-                    options: e.target.value.split(",").map((opt) => opt.trim()),
-                  })
-                }
-                className="border p-2 rounded w-full mt-2"
+                placeholder="Type option and press comma"
+                value={newFieldTempValue}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value.endsWith(",")) {
+                    const newOption = value.slice(0, -1).trim();
+                    if (newOption && !newField.options.includes(newOption)) {
+                      setNewField((prev) => ({
+                        ...prev,
+                        options: [...prev.options, newOption],
+                      }));
+                    }
+                    setNewFieldTempValue("");
+                  } else {
+                    setNewFieldTempValue(value);
+                  }
+                }}
+                className="bg-white border p-2 rounded w-full mt-2"
               />
-            </div>
-          )}
 
-          {/* Input for URL */}
-          {newField.type === "url" && (
-            <div className="hidden">
-              <input
-                type="text"
-                placeholder="Enter A Test URL"
-                value={newField.value || "Dummy"}
-                onChange={(e) =>
-                  setNewField({ ...newField, value: e.target.value })
-                }
-                className="border p-2 rounded w-full mt-2"
-                required
-              />
-              {/* Display the clickable URL preview */}
-              {newField.value && (
-                <p className="mt-2">
-                  Preview:{" "}
-                  <a
-                    href={newField.value}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    {newField.value}
-                  </a>
-                </p>
+              {newField.options.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {newField.options.map((opt, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center bg-blue-100 text-blue-900 px-2 py-1 rounded-full text-sm"
+                    >
+                      {opt}
+                      <button
+                        type="button"
+                        className="ml-1 text-blue-600 hover:text-red-600"
+                        onClick={() => {
+                          setNewField((prev) => ({
+                            ...prev,
+                            options: prev.options.filter((o) => o !== opt),
+                          }));
+                        }}
+                      >
+                        ❌
+                      </button>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           )}
@@ -265,49 +273,55 @@ export default function Fields() {
             <div>
               <input
                 type="text"
-                placeholder="Comma-separated options"
-                value={editingField.options.join(", ")}
-                onChange={(e) =>
-                  setEditingField({
-                    ...editingField,
-                    options: e.target.value.split(",").map((opt) => opt.trim()),
-                  })
-                }
+                placeholder="Type option and press comma"
+                value={editingFieldTempValue}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value.endsWith(",")) {
+                    const newOption = value.slice(0, -1).trim();
+                    if (
+                      newOption &&
+                      !editingField.options.includes(newOption)
+                    ) {
+                      setEditingField((prev) => ({
+                        ...prev,
+                        options: [...prev.options, newOption],
+                      }));
+                    }
+                    setEditingFieldTempValue("");
+                  } else {
+                    setEditingFieldTempValue(value);
+                  }
+                }}
                 className="bg-white border p-2 rounded w-full mt-2"
               />
-            </div>
-          )}
 
-          {/* Input for URL */}
-          {editingField.type === "url" && (
-            <div className="hidden">
-              <input
-                type="text"
-                placeholder="Enter A Test URL"
-                value={editingField.value || "Dummy"}
-                onChange={(e) =>
-                  setEditingField({ ...editingField, value: e.target.value })
-                }
-                className="border p-2 rounded w-full mt-2"
-                required
-              />
-              {/* Display the clickable URL preview */}
-              {editingField.value && (
-                <p className="mt-2">
-                  Preview:{" "}
-                  <a
-                    href={editingField.value}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline"
-                  >
-                    {editingField.value}
-                  </a>
-                </p>
+              {editingField.options.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {editingField.options.map((opt, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center bg-blue-100 text-blue-900 px-2 py-1 rounded-full text-sm"
+                    >
+                      {opt}
+                      <button
+                        type="button"
+                        className="ml-1 text-blue-600 hover:text-red-600"
+                        onClick={() => {
+                          setEditingField((prev) => ({
+                            ...prev,
+                            options: prev.options.filter((o) => o !== opt),
+                          }));
+                        }}
+                      >
+                        ❌
+                      </button>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           )}
-
           <button
             type="submit"
             className="bg-green-800 hover:bg-green-600 text-white px-4 py-2 rounded mr-2 mt-3"
